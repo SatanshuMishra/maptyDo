@@ -2,7 +2,7 @@
   --color-brand--1: #ffb545;
   --color-brand--2: #00c46a;
 
-  --color-dark--1: #2d3439;
+  --color-dark--1: #05080f;
   --color-dark--2: #42484d;
   --color-light--1: #aaa;
   --color-light--2: #ececec;
@@ -217,4 +217,63 @@ a:visited {
 }
 .cycling-popup .leaflet-popup-content-wrapper {
   border-left: 5px solid var(--color-brand--1);
+}
+
+/* ////////////////////////////////////////////// */
+
+.form__to-do {
+  background-color: #0e1528;
+  padding: 3rem;
+  border-radius: 5px;
+}
+
+.form__to-do.hidden {
+  transform: translateY(-30rem);
+  height: 0;
+  padding: 0 2.25rem;
+  margin-bottom: 0;
+  opacity: 0;
+}
+
+.form__upper-row {
+  padding: 0.5rem;
+}
+
+.form__lower-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  align-items: end;
+}
+
+.form__input-small {
+  width: 100%;
+  max-width: 10rem;
+  padding: 0.3rem 1.1rem;
+  font-family: inherit;
+  font-size: 1.4rem;
+  border: none;
+  border-radius: 3px;
+  background-color: #bbd2ff;
+  transition: all 0.2s;
+}
+
+.form__field {
+  display: flex;
+  flex-direction: column;
+  padding-right: 1rem;
+}
+
+.form__button {
+  display: none;
+  height: fit-content;
+  padding: 0.3rem 1.1rem;
+  font-family: inherit;
+  font-size: 1.4rem;
+  border: none;
+  border-radius: 3px;
+  background-color: #0055ff;
+  transition: all 0.2s;
+  color: #fff;
+  font-weight: 800;
 }
