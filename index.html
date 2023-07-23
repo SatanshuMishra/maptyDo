@@ -47,20 +47,28 @@
       </form>
 
       <!-- <li class="task" data-id="${task.id}">
-        <h2 class="task__title">${task._setDescription}</h2>
-        <div class="task__details">
-          <span class="task__icon">⌚</span>
-          <span class="task__value">${task.duration}</span>
-          <span class="task__unit">min</span>
+        <div class="task__information">
+          <h2 class="task__title">${task._setDescription}</h2>
+          <div class="task__specifics">
+            <div class="task__details">
+              <span class="task__icon">⏱️</span>
+              <span class="task__value">${task.duration}</span>
+              <span class="task__unit">min</span>
+            </div>
+            <div class="task__details">
+              <span class="task__icon">📆</span>
+              <span class="task__value">${task.deadline}</span>
+              <span class="task__unit">hours</span>
+            </div>
+          </div>
+          <div class="task__details">
+            <button
+              style="margin:1rem 0 0 0; padding:0.7rem 1rem; background-color: rgb(31, 233, 166); border: none; border-radius: 5px;">COMPLETE</button>
+          </div>
         </div>
-        <div class="task__details">
-          <span class="task__icon">📆</span>
-          <span class="task__value">${task.deadline}</span>
-          <span class="task__unit">hours</span>
-        </div>
-        <div class="task__details">
-          <button
-            style="margin:5px 0 0 0; padding:0.4rem 1rem; background-color: rgb(31, 233, 166); border: none; border-radius: 5px;">COMPLETE</button>
+        <div class="task__weather">
+          <img style="max-width: fit-content;" src="https://openweathermap.org/img/wn/10d.png" />
+          <p class="weather__description">Showers, 18<sup>o</sup></p>
         </div>
       </li> -->
 

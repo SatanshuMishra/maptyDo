@@ -15,6 +15,10 @@ class Task {
     this.duration = duration; // MINUTES
     this.deadline = deadline; // TIME
     this._setDescription(description);
+    this.condition = null;
+    this.temperature = null;
+    this.icon = null;
+    this._getWeatherData();
   }
 
   _setDescription(description) {
@@ -24,6 +28,48 @@ class Task {
     this._setDescription = `${description.toUpperCase()} on ${
       months[this.date.getMonth()]
     } ${this.date.getDate()}`;
+  }
+
+  async _getWeatherData() {
+    const API_KEY = `4736594bab76e2b6b76b9af1120419e8`;
+    const url = `http://api.openweathermap.org/geo/1.0/reverse?lat=${
+      this.coords[0]
+    }&lon=${this.coords[1]}&limit=${`1`}&appid=${API_KEY}`;
+
+    return fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data[0]);
+        const weatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${data[0].name}&units=metric&appid=${API_KEY}`;
+
+        return fetch(weatherURL)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            const weatherData = {
+              temperature: data.main.temp,
+              condition: data.weather[0].main,
+              condIcon: data.weather[0].icon,
+            };
+            console.log(weatherData);
+            return weatherData;
+          });
+      })
+      .then(weatherData => {
+        document
+          .querySelector(`.weather__icon-${this.id}`)
+          .setAttribute(
+            'src',
+            `https://openweathermap.org/img/wn/${weatherData.condIcon}.png`
+          );
+        document.querySelector(
+          `.description-${this.id}`
+        ).innerHTML = `${weatherData.condition}, ${weatherData.temperature}°C`;
+
+        this.condition = weatherData.condition;
+        this.icon = weatherData.condIcon;
+        this.temperature = weatherData.temperature;
+      });
   }
 }
 
@@ -174,22 +220,31 @@ class MaptyDo {
   _renderTask(task) {
     let html = `
     <li class="task" data-id="${task.id}">
-      <h2 class="task__title">${task._setDescription}</h2>
-      <div class="task__details">
-        <span class="task__icon">⌚</span>
-        <span class="task__value">${task.duration}</span>
-        <span class="task__unit">min</span>
+      <div class="task__information">
+        <h2 class="task__title">${task._setDescription}</h2>
+        <div class="task__specifics">
+          <div class="task__details">
+            <span class="task__icon">⏱️</span>
+            <span class="task__value">${task.duration}</span>
+            <span class="task__unit">min</span>
+          </div>
+          <div class="task__details">
+            <span class="task__icon">📆</span>
+            <span class="task__value">${task.deadline}</span>
+            <span class="task__unit">hours</span>
+          </div>
+        </div>
+        <div class="task__details">
+          <button class="task__complete-btn">COMPLETE</button>
+        </div>
       </div>
-      <div class="task__details">
-          <span class="task__icon">📆</span>
-          <span class="task__value">${task.deadline}</span>
-          <span class="task__unit">hours</span>
-      </div>
-      <div class="task__details">
-        <button class="task__complete-btn">COMPLETE</button>
+      <div class="task__weather">
+        <img class="weather__icon-${task.id}" style="max-width: fit-content;" src="https://openweathermap.org/img/wn/${task.icon}.png" />
+        <p class="weather__description description-${task.id}">${task.condition}, ${task.temperature}°C</p>
       </div>
     </li>`;
 
+    // <button class="task__complete-btn">COMPLETE</button>;
     form.insertAdjacentHTML('afterend', html);
   }
 
@@ -243,5 +298,7 @@ class MaptyDo {
     console.log(this.#tasks);
   }
 }
+
+// http://api.openweathermap.org/geo/1.0/reverse?lat={lat}&lon={lon}&limit={limit}&appid={API key}
 
 const app = new MaptyDo();
