@@ -42,6 +42,13 @@ class MaptyDo {
     form.addEventListener('submit', this._newTask.bind(this));
     // TASK CLICK EVENT LISTENER (BRING TASK INTO VIEW)
     containerTasks.addEventListener('click', this._moveToPopup.bind(this));
+
+    $(document).on(
+      'click',
+      '.task__complete-btn',
+      this._completeTask.bind(this)
+    );
+    // completeTask.addEventListener('click', this._completeTask.bind(this));
   }
 
   _getPosition() {
@@ -61,8 +68,8 @@ class MaptyDo {
   _loadMap(position) {
     const { latitude } = position.coords;
     const { longitude } = position.coords;
-
     const coords = [latitude, longitude];
+
     this.#map = L.map('map').setView(coords, this.#mapZoom);
 
     // https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
@@ -78,8 +85,8 @@ class MaptyDo {
     // HANDLING MAP CLICKS
     this.#map.on('click', this._showForm.bind(this));
 
-    this.#tasks.forEach(workout => {
-      this._renderTaskMarker(workout);
+    this.#tasks.forEach(task => {
+      this._renderTaskMarker(task);
     });
   }
 
@@ -131,20 +138,33 @@ class MaptyDo {
     // HIDE FORM & CLEAR INPUT FIELDS
     this._hideForm();
 
-    // SET LOCAL STORAGE TO ALL WORKOUTS
+    // SET LOCAL STORAGE TO ALL TASKS
     this._setLocalStorage();
   }
 
   _renderTaskMarker(task) {
-    L.marker(task.coords)
+    var pin = L.icon({
+      iconUrl: '../images/map-pin.png',
+      shadowUrl: '../images/pin-shadow.png',
+
+      iconSize: [25, 25], // size of the icon
+      shadowSize: [0, 0], // size of the shadow
+      iconAnchor: null, // point of the icon which will correspond to marker's location
+      shadowAnchor: [4, 62], // the same for the shadow
+      popupAnchor: [0, 0], // point from which the popup should open relative to the iconAnchor
+    });
+
+    L.marker(task.coords, { icon: pin })
       .addTo(this.#map)
       .bindPopup(
         L.popup({
+          autoPan: true,
+          keepInView: true,
           maxWidth: 250,
           minWidth: 100,
           autoClose: false,
           closeOnClick: false,
-          className: `running-popup`,
+          className: ``,
         })
       )
       .setPopupContent(`${'🏃‍♂️'} ${task._setDescription}`)
@@ -153,35 +173,28 @@ class MaptyDo {
 
   _renderTask(task) {
     let html = `
-    <li class="workout workout--running" data-id="${task.id}">
-      <h2 class="workout__title">${task._setDescription}</h2>
-      <div class="workout__details">
-        <span class="workout__icon">${`🏃‍♂️`}</span>
-        <span class="workout__value">${task.duration}</span>
-        <span class="workout__unit">km</span>
+    <li class="task" data-id="${task.id}">
+      <h2 class="task__title">${task._setDescription}</h2>
+      <div class="task__details">
+        <span class="task__icon">⌚</span>
+        <span class="task__value">${task.duration}</span>
+        <span class="task__unit">min</span>
       </div>
-      <div class="workout__details">
-        <span class="workout__icon">⏱</span>
-        <span class="workout__value">${task.duration}</span>
-        <span class="workout__unit">min</span>
+      <div class="task__details">
+          <span class="task__icon">📆</span>
+          <span class="task__value">${task.deadline}</span>
+          <span class="task__unit">hours</span>
       </div>
-      <div class="workout__details">
-          <span class="workout__icon">⚡️</span>
-          <span class="workout__value">${task.deadline}</span>
-          <span class="workout__unit">min/km</span>
-        </div>
-        <div class="workout__details">
-          <span class="workout__icon">🦶🏼</span>
-          <span class="workout__value">${task.deadline}</span>
-          <span class="workout__unit">spm</span>
-        </div>
-      </li>`;
+      <div class="task__details">
+        <button class="task__complete-btn">COMPLETE</button>
+      </div>
+    </li>`;
 
     form.insertAdjacentHTML('afterend', html);
   }
 
   _moveToPopup(e) {
-    const taskEl = e.target.closest('.workout');
+    const taskEl = e.target.closest('.task');
     if (!taskEl) return;
 
     const task = this.#tasks.find(task => task.id === taskEl.dataset.id);
@@ -208,13 +221,26 @@ class MaptyDo {
     this.#tasks = data;
     this.#tasks.forEach(task => {
       this._renderTask(task);
-      // this._renderWorkoutMarker(workout);
     });
   }
 
   reset() {
     localStorage.removeItem('tasks');
     location.reload();
+  }
+
+  _completeTask(e) {
+    e.stopPropagation();
+
+    console.log('CompTask');
+    const taskEl = e.target.closest('.task');
+    if (!taskEl) return;
+
+    const index = this.#tasks.indexOf(task => task.id === taskEl.dataset.id);
+    this.#tasks.splice(index, 1);
+    this._setLocalStorage();
+    location.reload();
+    console.log(this.#tasks);
   }
 }
 
