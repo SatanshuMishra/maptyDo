@@ -15,10 +15,6 @@ class Task {
     this.duration = duration; // MINUTES
     this.deadline = deadline; // TIME
     this._setDescription(description);
-    this.condition = null;
-    this.temperature = null;
-    this.icon = null;
-    this._getWeatherData();
   }
 
   _setDescription(description) {
@@ -28,48 +24,6 @@ class Task {
     this._setDescription = `${description.toUpperCase()} on ${
       months[this.date.getMonth()]
     } ${this.date.getDate()}`;
-  }
-
-  async _getWeatherData() {
-    const API_KEY = `4736594bab76e2b6b76b9af1120419e8`;
-    const url = `http://api.openweathermap.org/geo/1.0/reverse?lat=${
-      this.coords[0]
-    }&lon=${this.coords[1]}&limit=${`1`}&appid=${API_KEY}`;
-
-    return fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data[0]);
-        const weatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${data[0].name}&units=metric&appid=${API_KEY}`;
-
-        return fetch(weatherURL)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data);
-            const weatherData = {
-              temperature: data.main.temp,
-              condition: data.weather[0].main,
-              condIcon: data.weather[0].icon,
-            };
-            console.log(weatherData);
-            return weatherData;
-          });
-      })
-      .then(weatherData => {
-        document
-          .querySelector(`.weather__icon-${this.id}`)
-          .setAttribute(
-            'src',
-            `https://openweathermap.org/img/wn/${weatherData.condIcon}.png`
-          );
-        document.querySelector(
-          `.description-${this.id}`
-        ).innerHTML = `${weatherData.condition}, ${weatherData.temperature}°C`;
-
-        this.condition = weatherData.condition;
-        this.icon = weatherData.condIcon;
-        this.temperature = weatherData.temperature;
-      });
   }
 }
 
@@ -94,7 +48,6 @@ class MaptyDo {
       '.task__complete-btn',
       this._completeTask.bind(this)
     );
-    // completeTask.addEventListener('click', this._completeTask.bind(this));
   }
 
   _getPosition() {
@@ -112,13 +65,12 @@ class MaptyDo {
   }
 
   _loadMap(position) {
-    const { latitude } = position.coords;
-    const { longitude } = position.coords;
+    // GET USER COORDINATES FROM CURRENT LOCATION DATA
+    const { latitude, longitude } = position.coords;
     const coords = [latitude, longitude];
 
+    // SET MAP TO CURRENT COORDINATES
     this.#map = L.map('map').setView(coords, this.#mapZoom);
-
-    // https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
 
     L.tileLayer(
       'https://api.mapbox.com/styles/v1/captainmidway/ckcxaflwj0olg1imua3ot67dw/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2FwdGFpbm1pZHdheSIsImEiOiJja2N4YTBmNmMwNGVmMnpwcDl0d2ZrdTZvIn0.eCTzdhwPIm2WejMEWGsKBA',
@@ -151,7 +103,6 @@ class MaptyDo {
   }
 
   _newTask(e) {
-    console.log('Entered');
     const validInputs = (...inputs) =>
       inputs.every(inp => Number.isFinite(inp));
     const allPositive = (...inputs) => inputs.every(inp => inp > 0);
@@ -239,13 +190,45 @@ class MaptyDo {
         </div>
       </div>
       <div class="task__weather">
-        <img class="weather__icon-${task.id}" style="max-width: fit-content;" src="https://openweathermap.org/img/wn/${task.icon}.png" />
-        <p class="weather__description description-${task.id}">${task.condition}, ${task.temperature}°C</p>
+        <img class="weather__icon-${task.id}" style="max-width: fit-content;" src="" />
+        <p class="weather__description description-${task.id}"></p>
       </div>
     </li>`;
-
-    // <button class="task__complete-btn">COMPLETE</button>;
     form.insertAdjacentHTML('afterend', html);
+    this._fetchWeatherInformation(task.id, task.coords);
+  }
+
+  async _fetchWeatherInformation(id, coords) {
+    const API_KEY = `4736594bab76e2b6b76b9af1120419e8`;
+    const url = `http://api.openweathermap.org/geo/1.0/reverse?lat=${
+      coords[0]
+    }&lon=${coords[1]}&limit=${`1`}&appid=${API_KEY}`;
+
+    return fetch(url)
+      .then(response => response.json())
+      .then(async data => {
+        const weatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${data[0].name}&units=metric&appid=${API_KEY}`;
+
+        const response = await fetch(weatherURL);
+        const data_2 = await response.json();
+        const weatherData = {
+          temperature: data_2.main.temp,
+          condition: data_2.weather[0].main,
+          condIcon: data_2.weather[0].icon,
+        };
+        return weatherData;
+      })
+      .then(weatherData => {
+        document
+          .querySelector(`.weather__icon-${id}`)
+          .setAttribute(
+            'src',
+            `https://openweathermap.org/img/wn/${weatherData.condIcon}.png`
+          );
+        document.querySelector(
+          `.description-${id}`
+        ).innerHTML = `${weatherData.condition}, ${weatherData.temperature}°C`;
+      });
   }
 
   _moveToPopup(e) {
@@ -287,7 +270,6 @@ class MaptyDo {
   _completeTask(e) {
     e.stopPropagation();
 
-    console.log('CompTask');
     const taskEl = e.target.closest('.task');
     if (!taskEl) return;
 
@@ -295,7 +277,6 @@ class MaptyDo {
     this.#tasks.splice(index, 1);
     this._setLocalStorage();
     location.reload();
-    console.log(this.#tasks);
   }
 }
 
