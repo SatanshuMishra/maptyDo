@@ -200,7 +200,7 @@ class MaptyDo {
 
   async _fetchWeatherInformation(id, coords) {
     const API_KEY = `4736594bab76e2b6b76b9af1120419e8`;
-    const url = `http://api.openweathermap.org/geo/1.0/reverse?lat=${
+    const url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${
       coords[0]
     }&lon=${coords[1]}&limit=${`1`}&appid=${API_KEY}`;
 
