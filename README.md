@@ -31,3 +31,6 @@
 ## Contributions
 
 Any contributions are welcome. Fork the repository and send me a pull request when you're ready.
+
+## Attributions
+Inspired by Mapty, created by [@Jonas Schmedtmann](https://github.com/SatanshuMishra/maptyDo/blob/main/images/readme-assets/Banner.png). 
