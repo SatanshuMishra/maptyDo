@@ -20,7 +20,7 @@
 
 ## Features
 
-- Uses both time and geography to give the user better overview of their day.
+- Use both time and geography to give yourself a better overview of their day.
 - Accidentally closed with browser? Temporarily lost internet connectivity? Don't worry your tasks will be right where you left them.
 - Don't have time to check the weather? maptyDo has you covered, showing you the current weather at each of your task locations.
 
@@ -30,4 +30,4 @@
 
 ## Contributions
 
-Any and all contributions are welcome. Fork the repository and send me a pull request when you're ready.
+Any contributions are welcome. Fork the repository and send me a pull request when you're ready.
