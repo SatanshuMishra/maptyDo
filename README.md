@@ -1,8 +1,8 @@
-<div style="wi[Title](padding:%25204px%253B)dth:100%; display: flex; flex-direction:column; justify-content: center;">
+<div align="center" style="wi[Title](padding:%25204px%253B)dth:100%; display: flex; flex-direction:column; justify-content: center;">
    <div style="width:100%; display: flex; justify-content: center;">
       <img src="./images/readme-assets/Banner.png">
    </div>
-   <div align="center">
+   <div>
       <img style="padding: 4px;" src="https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white">
       <img style="padding: 4px;" src="https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white">
       <img style="padding: 4px;" src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E">
