@@ -13,7 +13,7 @@
 
 ## Overview
 
-<p> <b style="color:#0085FF; font-weight: 800;">maptyDo</b> is what you get when you combine a map 🗺️ with a productivity app ✅. Organize your day by time and geography. Click a locati
+<p> <b style="color:#0085FF; font-weight: 800;">maptyDo</b> is what you get when you combine a map 🗺️ with a productivity app ✅. Organize your day by time and geography. Click a location, set the amount of time and the deadline of the task, and click enter!
 </p>
 
 ![App Showcase](./images/readme-assets/maptyDo.gif)
