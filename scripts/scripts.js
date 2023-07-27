@@ -142,8 +142,8 @@ class MaptyDo {
 
   _renderTaskMarker(task) {
     var pin = L.icon({
-      iconUrl: '../images/map-pin.png',
-      shadowUrl: '../images/pin-shadow.png',
+      iconUrl: './../images/map-pin.png',
+      shadowUrl: './../images/pin-shadow.png',
 
       iconSize: [25, 25], // size of the icon
       shadowSize: [0, 0], // size of the shadow
