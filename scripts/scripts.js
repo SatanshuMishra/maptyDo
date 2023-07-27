@@ -32,6 +32,7 @@ class MaptyDo {
   #mapZoom = 15;
   #mapEvent;
   #tasks = [];
+  #markers = [];
 
   constructor() {
     // IF EXISTS, FETCH TASK FROM LOCAL STORAGE
@@ -151,7 +152,7 @@ class MaptyDo {
       popupAnchor: [0, 0], // point from which the popup should open relative to the iconAnchor
     });
 
-    L.marker(task.coords, { icon: pin })
+    let marker = L.marker(task.coords, { icon: pin })
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -164,8 +165,10 @@ class MaptyDo {
           className: ``,
         })
       )
-      .setPopupContent(`${'🏃‍♂️'} ${task._setDescription}`)
+      .setPopupContent(`${task._setDescription}`)
       .openPopup();
+
+    this.#markers.push([task.id, marker]);
   }
 
   _renderTask(task) {
@@ -276,7 +279,11 @@ class MaptyDo {
     const index = this.#tasks.indexOf(task => task.id === taskEl.dataset.id);
     this.#tasks.splice(index, 1);
     this._setLocalStorage();
-    location.reload();
+
+    taskEl.remove();
+
+    let [_, marker] = this.#markers.find(arr => arr[0] === taskEl.dataset.id);
+    this.#map.removeLayer(marker);
   }
 }
 
